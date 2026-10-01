@@ -146,3 +146,31 @@ th { color: var(--ss-muted); font-weight: 700; font-size: 0.78rem; }
 
 .stall-strip { display: flex; height: 56px; border: 2px solid var(--ss-curb); overflow: hidden; margin: 0.75rem 0; background: #3a3126; }
 .stall-cell { display: flex; align-items: center; justify-content: center; font-size: 0.7rem; border-right: 1px solid rgba(255,255,255,0.08); overflow: hidden; white-space: nowrap; }
+
+/* 分配工具条与运行抽屉 */
+.ss-toolbar { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+.ss-btn-ghost { background: var(--ss-paper); color: var(--ss-accent); border: 2px solid var(--ss-accent); }
+.ss-btn-danger { background: var(--ss-bad); }
+.ss-error {
+  background: rgba(163,58,44,0.12); color: var(--ss-bad);
+  border: 1px solid var(--ss-bad); border-radius: 4px;
+  padding: 0.45rem 0.7rem; font-size: 0.82rem; margin: 0 0 0.6rem;
+}
+.ss-card-title { margin: 0 0 0.5rem; font-size: 0.95rem; font-weight: 800; }
+.ss-drawer-mask {
+  position: fixed; inset: 0; background: rgba(26,20,14,0.45);
+  display: flex; justify-content: flex-end; z-index: 40;
+}
+.ss-drawer {
+  width: min(430px, 92vw); height: 100%; overflow-y: auto;
+  background: var(--ss-paper); border-left: 3px solid var(--ss-curb);
+  box-shadow: -6px 0 18px rgba(26,20,14,0.35);
+  padding: 1rem 1.1rem;
+}
+.ss-drawer h2 { margin: 0 0 0.3rem; font-size: 1.05rem; }
+.ss-boost-select {
+  font: inherit; padding: 0.2rem 0.4rem;
+  border: 2px solid var(--ss-curb); border-radius: 3px; background: #fff;
+}
+.ss-drawer-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.8rem; }
+.ss-drawer-note { font-size: 0.78rem; margin: 0.6rem 0 0; }

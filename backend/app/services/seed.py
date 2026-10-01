@@ -15,7 +15,9 @@ def seed_if_empty(db: Session) -> None:
     vendors = [
         ("阿强烧烤", 4.0, 1), ("林记糖水", 3.0, 1), ("老周水果", 5.0, 2),
         ("小美饰品", 2.5, 2), ("大碗面", 6.0, 1), ("手作皮具", 3.5, 3),
-        ("巨型舞台车", 12.0, 9),
+        # 巨型舞台车：全场最宽但登记优先垫底（9）。未抬时轮不到连续空档 → 放不下；
+        # 本轮抬到 1 即可进图；清除临时后回到优先 9 的劣势。
+        ("巨型舞台车", 9.0, 9),
     ]
     for name, wdt, pri in vendors:
         db.add(Vendor(market_day_id=day.id, name=name, stall_width_m=wdt, priority=pri))
