@@ -2,6 +2,9 @@
 from __future__ import annotations
 from dataclasses import asdict, dataclass
 
+class PriorityError(ValueError):
+    """本轮临时优先不合法（未知摊主或值不在 1–9）；整次抬升必须拒绝。"""
+
 @dataclass
 class Placement:
     vendor_id: int
@@ -80,3 +83,32 @@ def result_to_dict(r: AllocResult) -> dict:
         "rejected": [asdict(x) for x in r.rejected],
         "free_spans": [{"start_m": a, "end_m": b} for a, b in r.free_spans],
     }
+
+def apply_temp_priorities(vendors: list[dict], overrides: dict) -> list[dict]:
+    """Return copied vendor dicts with this round's temp priority applied.
+
+    只影响本轮：绝不 mutate 入参、绝不写回登记优先。overrides 为 {vendor_id: temp_priority}。
+    任一 id 不存在或值不是 1–9 的真整数（拒绝 bool/float/str）都抛 PriorityError，
+    由调用方整次拒绝，禁止半成功。
+    """
+    by_id = {}
+    for v in vendors:
+        vid = v["id"]
+        if vid in by_id:
+            raise PriorityError(f"登记摊主存在重复 id={vid}，无法分配")
+        by_id[vid] = v
+    # 先做完全部校验，再产出拷贝，保证非法时一个 dict 都不改。
+    for vid, val in overrides.items():
+        if vid not in by_id:
+            raise PriorityError(f"临时优先指向不存在的摊主 id={vid}，整次抬升已拒绝")
+        if isinstance(val, bool) or not isinstance(val, int) or not (1 <= val <= 9):
+            raise PriorityError(
+                f"摊主 id={vid} 的本轮临时优先必须是 1 到 9 的整数，整次抬升已拒绝"
+            )
+    out: list[dict] = []
+    for v in vendors:
+        nv = dict(v)
+        if v["id"] in overrides:
+            nv["priority"] = overrides[v["id"]]
+        out.append(nv)
+    return out
